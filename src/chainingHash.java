@@ -38,8 +38,27 @@ public class chainingHash{
 		table[wordElement.length].WordMap.add(wordElement);
     }
 	 	
-	
-	
+	public boolean searchWord(String writenWord) {
+		
+		if(writenWord.length() == 1) {
+			return true;
+		}
+		
+		for(int n = 0; n < table[writenWord.length()].WordMap.size(); n++) {
+			
+			if(table[writenWord.length()].WordMap.get(n).word.equals(writenWord)){
+					return true;
+				}
+			// to make first letter non case sensetive
+			if(table[writenWord.length()].WordMap.get(n).word.charAt(0) == lowerChar(writenWord.charAt(0))){
+				if(table[writenWord.length()].WordMap.get(n).word.substring(1).equals(writenWord.substring(1))){
+					return true;
+					}
+				}
+		}
+		return false;
+    }
+
 	public int letterToInt(char src) {
 		switch(src) {
 		case 'q': return 0;
