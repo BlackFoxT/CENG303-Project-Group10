@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Graph {
     boolean isEnded = false;
@@ -30,5 +33,45 @@ public class Graph {
 	
 	public ArrayList<Integer> getPath(){
 		return path;
+	}
+	public int dijkstra(int src, int target) {
+	    int[] distance = new int[nodes.size()];
+	    int[] predecessors = new int[nodes.size()];
+	    Arrays.fill(distance, Integer.MAX_VALUE);
+	    Arrays.fill(predecessors, -1); // Initialize predecessors to -1
+	    distance[src] = 0;
+
+	    Queue<Node> pq = new LinkedList<>();
+	    pq.offer(nodes.get(src));
+
+	    while (!pq.isEmpty()) {
+	        Node current = pq.poll();
+	        int currentNodeIndex = nodes.indexOf(current);
+
+	        for (int i = 0; i < matrix[currentNodeIndex].length; i++) {
+	            if (matrix[currentNodeIndex][i] != 0) {
+	                int newDistance = distance[currentNodeIndex] + matrix[currentNodeIndex][i];
+	                if (newDistance < distance[i]) {
+	                    distance[i] = newDistance;
+	                    predecessors[i] = currentNodeIndex; // Update predecessor
+	                    pq.offer(nodes.get(i));
+	                }
+	            }
+	        }
+	    }
+
+	    return calculateShortestPathSteps(predecessors, src, target);
+	}
+
+	private int  calculateShortestPathSteps(int[] predecessors, int src, int target) {
+	    ArrayList<Integer> path = new ArrayList<>();
+	    int steps = 0;
+	    int current = target;
+	    while (current != -1) {
+	        path.add(0, nodes.get(current).data);
+	        current = predecessors[current];
+	        steps++;
+	    }
+	    return steps-1;
 	}
 }
