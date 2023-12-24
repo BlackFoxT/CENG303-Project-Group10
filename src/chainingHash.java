@@ -313,7 +313,45 @@ public class chainingHash{
 		else
 			return sameClosestLetter.get(index);
 	}
+	
+	
+	public void printCorrectedOne(String sentence){
+		String[] myWords = sentence.split(" ");
+		
+		for(int current = 0; current < myWords.length; current++) {
+		boolean lastOneflag = false;
+		char lastOne = ' ';
+		
+		// for ends with . ?  
+		if(!Character.isLetter(myWords[current].charAt(myWords[current].length()-1))) {
+			lastOne = myWords[current].charAt(myWords[current].length()-1);
+			lastOneflag = true;
+			myWords[current] = myWords[current].substring(0,myWords[current].length()-1);
+		}
+			
+		// if start with digit
+		if(searchWord(myWords[current]) || Character.isDigit(myWords[current].charAt(0))) {
+				myWords[current] = myWords[current];
+	    }
+	    else {
+	    	String newWord = findAvaliableWord(myWords[current]);
+	    	if(newWord != null)
+	    		myWords[current] = newWord;
+	    	else
+	    		myWords[current] = myWords[current];
+	    	}
+		
+		if(lastOneflag)	
+			myWords[current] = myWords[current] + lastOne;
+		
+		}
 
+		for(int i=0; i < myWords.length;i++) {
+			System.out.print(myWords[i] + " ");
+		}
+		
+	}
+	
 	public int letterToInt(char src) {
 		switch(src) {
 		case 'q': return 0;
@@ -342,7 +380,7 @@ public class chainingHash{
 		case 'b': return 23;
 		case 'n': return 24;
 		case 'm': return 25;
-		default: return -1;
+		default: return -1;
 		}
 	}
 }
