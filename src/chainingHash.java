@@ -26,8 +26,8 @@ public class chainingHash{
 	}
 	
 	 public void createKeyboardGraph() {
-		int vertices = 26;
-		Graph graph1 = new Graph(vertices);
+			int vertices = 26;
+			Graph graph1 = new Graph(vertices);
 	      
 	         graph1.addNode(new Node(1));
 	         graph1.addNode(new Node(2));
@@ -151,6 +151,7 @@ public class chainingHash{
 	         graph1.addEdge(15, 6);
 	         graph1.addEdge(15, 14);
 	         graph1.addEdge(15, 16);
+	        // graph1.addEdge(15, 22);
 	         graph1.addEdge(15, 23);
 	         graph1.addEdge(15, 24);
 	         
@@ -245,8 +246,74 @@ public class chainingHash{
 		}
 		return false;
     }
-
 	
+	public String findAvaliableWord(String writenWord) {
+		
+		
+		int lCount = 0;
+		int maxL = Integer.MIN_VALUE;
+		ArrayList<String> sameClosestLetter = new ArrayList<String>();
+		
+		for(int i=0; i<this.table[writenWord.length()].WordMap.size(); i++) {
+			for(int j=0; j<writenWord.length(); j++) {
+				
+				if(j == 0){
+					if(this.table[writenWord.length()].WordMap.get(i).word.charAt(j) == lowerChar(writenWord.charAt(j))) {
+						lCount++;
+					}
+				}
+				else if(this.table[writenWord.length()].WordMap.get(i).word.charAt(j) == writenWord.charAt(j)) {
+					lCount++;
+				}
+				if(maxL < lCount) maxL=lCount;
+			}
+			lCount = 0;
+		}
+		
+		for(int i=0; i<this.table[writenWord.length()].WordMap.size(); i++) {
+			for(int j=0; j<writenWord.length(); j++) {
+				if(j == 0){
+					if(this.table[writenWord.length()].WordMap.get(i).word.charAt(j) == lowerChar(writenWord.charAt(j))) {
+						lCount++;
+					}
+				}
+				else if(this.table[writenWord.length()].WordMap.get(i).word.charAt(j) == writenWord.charAt(j)) {
+					lCount++;
+				}
+			}
+			if(maxL == lCount) {
+				sameClosestLetter.add(this.table[writenWord.length()].WordMap.get(i).word);
+			}
+			lCount = 0;
+		}
+		
+	
+		int minD = Integer.MAX_VALUE, countL = 0 , index = 0;
+		for(int i=0; i<sameClosestLetter.size(); i++) {
+			for(int j=0; j<writenWord.length(); j++) {
+				if(j == 0) {
+					countL += Math.abs(findIndexOfLetter(sameClosestLetter.get(i).charAt(j)) - findIndexOfLetter(lowerChar(writenWord.charAt(j))));
+				}	
+				else {
+					countL += Math.abs(findIndexOfLetter(sameClosestLetter.get(i).charAt(j)) - findIndexOfLetter(writenWord.charAt(j)));
+				}
+			}
+	
+			if(minD > countL) {
+				minD = countL;
+				index = i;
+			}
+			countL = 0;
+		}
+		
+		if(Character.isUpperCase(writenWord.charAt(0))) {
+			String lowerOne = sameClosestLetter.get(index);
+			return Character.toUpperCase(lowerOne.charAt(0)) + lowerOne.substring(1);
+		}
+		else
+			return sameClosestLetter.get(index);
+	}
+
 	public int letterToInt(char src) {
 		switch(src) {
 		case 'q': return 0;
