@@ -8,7 +8,8 @@ public class Graph {
     ArrayList<Integer> path;
 	ArrayList<Node> nodes;
 	int[][] matrix;
-	
+	int steps = 0;
+	int counts = 0;
 	Graph(int size){
 		nodes = new ArrayList<>();
 		matrix = new int[size][size];
@@ -60,18 +61,18 @@ public class Graph {
 	        }
 	    }
 
-	    return calculateShortestPathSteps(predecessors, src, target);
+		return printShortestPath(predecessors, src, target);
 	}
 
-	private int  calculateShortestPathSteps(int[] predecessors, int src, int target) {
+	private int  printShortestPath(int[] predecessors, int src, int target) {
 	    ArrayList<Integer> path = new ArrayList<>();
-	    int steps = 0;
+		int count = 0;
 	    int current = target;
 	    while (current != -1) {
 	        path.add(0, nodes.get(current).data);
 	        current = predecessors[current];
-	        steps++;
+			count++;
 	    }
-	    return steps-1;
+		return count-1;
 	}
 }
