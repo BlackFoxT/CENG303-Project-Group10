@@ -12,7 +12,7 @@ class WordElement{
 
 class ChainingMapOfWords{
 	int size = 0;
-	 ArrayList<WordElement> WordMap = new ArrayList<>();
+	 ArrayList<WordElement> wordList = new ArrayList<>();
 }
 
 public class chainingHash{
@@ -217,13 +217,9 @@ public class chainingHash{
     	return Character.toLowerCase(letter);
     }
 	
-	public int findIndexOfLetter(char letter) {
-		return letter - 'a';
-	}
-	
 	public void insertWord(String word) {
 		WordElement wordElement = new WordElement(word);
-		table[wordElement.length].WordMap.add(wordElement);
+		table[wordElement.length].wordList.add(wordElement);
     }
 	 	
 	public boolean searchWord(String writenWord) {
@@ -232,14 +228,14 @@ public class chainingHash{
 			return true;
 		}
 		
-		for(int n = 0; n < table[writenWord.length()].WordMap.size(); n++) {
+		for(int n = 0; n < table[writenWord.length()].wordList.size(); n++) {
 			
-			if(table[writenWord.length()].WordMap.get(n).word.equals(writenWord)){
+			if(table[writenWord.length()].wordList.get(n).word.equals(writenWord)){
 					return true;
 				}
-			// to make first letter non case sensetive
-			if(table[writenWord.length()].WordMap.get(n).word.charAt(0) == lowerChar(writenWord.charAt(0))){
-				if(table[writenWord.length()].WordMap.get(n).word.substring(1).equals(writenWord.substring(1))){
+			// to make first letter non case sensitive
+			if(table[writenWord.length()].wordList.get(n).word.charAt(0) == lowerChar(writenWord.charAt(0))){
+				if(table[writenWord.length()].wordList.get(n).word.substring(1).equals(writenWord.substring(1))){
 					return true;
 					}
 				}
@@ -249,54 +245,52 @@ public class chainingHash{
 	
 	public String findAvaliableWord(String writenWord) {
 		
-		
 		int lCount = 0;
 		int maxL = Integer.MIN_VALUE;
-		ArrayList<String> sameClosestLetter = new ArrayList<String>();
+		ArrayList<String> closestWords = new ArrayList<String>();
 		
-		for(int i=0; i<this.table[writenWord.length()].WordMap.size(); i++) {
+		for(int i=0; i<this.table[writenWord.length()].wordList.size(); i++) {
 			for(int j=0; j<writenWord.length(); j++) {
 				
 				if(j == 0){
-					if(this.table[writenWord.length()].WordMap.get(i).word.charAt(j) == lowerChar(writenWord.charAt(j))) {
+					if(this.table[writenWord.length()].wordList.get(i).word.charAt(j) == lowerChar(writenWord.charAt(j))) {
 						lCount++;
 					}
 				}
-				else if(this.table[writenWord.length()].WordMap.get(i).word.charAt(j) == writenWord.charAt(j)) {
+				else if(this.table[writenWord.length()].wordList.get(i).word.charAt(j) == writenWord.charAt(j)) {
 					lCount++;
 				}
-				if(maxL < lCount) maxL=lCount;
+				
 			}
+			if(maxL < lCount) maxL=lCount;
 			lCount = 0;
 		}
 		
-		for(int i=0; i<this.table[writenWord.length()].WordMap.size(); i++) {
+		for(int i=0; i<this.table[writenWord.length()].wordList.size(); i++) {
 			for(int j=0; j<writenWord.length(); j++) {
 				if(j == 0){
-					if(this.table[writenWord.length()].WordMap.get(i).word.charAt(j) == lowerChar(writenWord.charAt(j))) {
+					if(this.table[writenWord.length()].wordList.get(i).word.charAt(j) == lowerChar(writenWord.charAt(j))) {
 						lCount++;
 					}
 				}
-				else if(this.table[writenWord.length()].WordMap.get(i).word.charAt(j) == writenWord.charAt(j)) {
+				else if(this.table[writenWord.length()].wordList.get(i).word.charAt(j) == writenWord.charAt(j)) {
 					lCount++;
 				}
 			}
 			if(maxL == lCount) {
-				sameClosestLetter.add(this.table[writenWord.length()].WordMap.get(i).word);
+				closestWords.add(this.table[writenWord.length()].wordList.get(i).word);
 			}
 			lCount = 0;
 		}
 		
-	
+		this.createKeyboardGraph();
 		int minD = Integer.MAX_VALUE, countL = 0 , index = 0;
-		for(int i=0; i<sameClosestLetter.size(); i++) {
+		
+		for(int i=0; i<closestWords.size(); i++) {
 			for(int j=0; j<writenWord.length(); j++) {
-				if(j == 0) {
-					countL += Math.abs(findIndexOfLetter(sameClosestLetter.get(i).charAt(j)) - findIndexOfLetter(lowerChar(writenWord.charAt(j))));
-				}	
-				else {
-					countL += Math.abs(findIndexOfLetter(sameClosestLetter.get(i).charAt(j)) - findIndexOfLetter(writenWord.charAt(j)));
-				}
+				int start = this.letterToInt(closestWords.get(i).charAt(j));
+		        int end = this.letterToInt(lowerChar(writenWord.charAt(j)));
+				countL += this.graph.dijkstra(start, end);// Counting distance between 2 letters
 			}
 	
 			if(minD > countL) {
@@ -307,11 +301,11 @@ public class chainingHash{
 		}
 		
 		if(Character.isUpperCase(writenWord.charAt(0))) {
-			String lowerOne = sameClosestLetter.get(index);
+			String lowerOne = closestWords.get(index);
 			return Character.toUpperCase(lowerOne.charAt(0)) + lowerOne.substring(1);
 		}
 		else
-			return sameClosestLetter.get(index);
+			return closestWords.get(index);
 	}
 	
 	
@@ -329,7 +323,7 @@ public class chainingHash{
 			myWords[current] = myWords[current].substring(0,myWords[current].length()-1);
 		}
 			
-		// if start with digit
+		// if starts with digit
 		if(searchWord(myWords[current]) || Character.isDigit(myWords[current].charAt(0))) {
 				myWords[current] = myWords[current];
 	    }
