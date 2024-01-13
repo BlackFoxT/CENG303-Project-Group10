@@ -15,7 +15,14 @@ public class Main {
                 : sentence.split("\\s+");
 		
 		for(int current = 0; current < myWords.length; current++) {
-			if (!myWords[current].matches("[\\w\\p{Punct}]+")) return false;
+			// Check if the word contains at least one English letter
+	        if (!myWords[current].matches(".*[a-zA-Z].*")) {
+	            return false;
+	        }
+	        // Check if the word contains only alphanumeric characters and punctuation
+	        if (!myWords[current].matches("[\\w\\p{Punct}]+")) {
+	            return false;
+	        }
 		}
 		
 		return true;
@@ -23,14 +30,12 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		
 		chainingHash dictionary = new chainingHash();
-        
 		dictionary.initializeTable();
 		String line;
 		BufferedReader myReader = new BufferedReader(new FileReader("words.txt"));
 		while ((line = myReader.readLine()) != null) {
 			dictionary.insertWord(line);
 		}
-			
 		System.out.println("Enter a word or a sentence ");
 		Scanner input = new Scanner(System.in);
 	    String writenSentence = input.nextLine();
