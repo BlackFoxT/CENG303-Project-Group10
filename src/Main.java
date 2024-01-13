@@ -38,7 +38,7 @@ public class Main {
 		}
 		System.out.println("Enter a word or a sentence ");
 		Scanner input = new Scanner(System.in);
-	    String writenSentence = input.nextLine();
+		String writenSentence = input.nextLine();
 	    
 	    while(!isEnglishWords(writenSentence)){
 			System.out.println("Your input contains non english characters. Please enter a new one: ");
