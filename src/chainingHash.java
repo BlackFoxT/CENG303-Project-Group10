@@ -277,8 +277,9 @@ public class chainingHash{
 					lCount++;
 				}
 			}
+			
 			if(maxL == lCount) {
-				closestWords.add(this.table[writenWord.length()].wordList.get(i).word);
+					closestWords.add(this.table[writenWord.length()].wordList.get(i).word);
 			}
 			lCount = 0;
 		}
@@ -310,7 +311,9 @@ public class chainingHash{
 	
 	
 	public void printCorrectedOne(String sentence){
-		String[] myWords = sentence.split(" ");
+		String[] myWords = sentence.startsWith(" ") 
+                ? sentence.replaceFirst("^\\s+", "").split("\\s+")
+                : sentence.split("\\s+");
 		
 		for(int current = 0; current < myWords.length; current++) {
 		boolean lastOneflag = false;
